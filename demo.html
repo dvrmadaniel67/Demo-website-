@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#7c3aed">
+<title>Wishly — Digital Wishes</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --primary:#8b5cf6;
+  --secondary:#ec4899;
+  --bg:#08060d;
+  --card:rgba(255,255,255,.075);
+  --border:rgba(255,255,255,.13);
+  --text:#fff;
+  --muted:#aaa5b5;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(139,92,246,.25),transparent 30%),
+    radial-gradient(circle at 85% 20%,rgba(236,72,153,.18),transparent 30%),
+    radial-gradient(circle at 50% 100%,rgba(59,130,246,.12),transparent 35%),
+    var(--bg);
+  color:var(--text);
+  font-family:"DM Sans",sans-serif;
+  overflow-x:hidden;
+}
+
+button,
+input,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.screen{
+  display:none;
+  min-height:100vh;
+  padding:28px 18px 60px;
+}
+
+.screen.active{
+  display:block;
+  animation:fadeIn .45s ease;
+}
+
+.container{
+  width:min(1100px,100%);
+  margin:auto;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(12px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+@keyframes float{
+  0%,100%{
+    transform:translateY(0);
+  }
+  50%{
+    transform:translateY(-10px);
+  }
+}
+
+/* NAV */
+
+.nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:65px;
+}
+
+.logo{
+  font-size:23px;
+  font-weight:800;
+  letter-spacing:-1px;
+}
+
+.logo span{
+  background:linear-gradient(90deg,#c084fc,#f472b6);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.badge{
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.05);
+  padding:8px 13px;
+  border-radius:999px;
+  font-size:12px;
+  color:#d7d2df;
+}
+
+/* HERO */
+
+.hero{
+  text-align:center;
+  max-width:850px;
+  margin:auto;
+}
+
+.hero-orb{
+  width:90px;
+  height:90px;
+  margin:0 auto 25px;
+  border-radius:28px;
+  display:grid;
+  place-items:center;
+  font-size:42px;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);
+  box-shadow:0 20px 60px rgba(139,92,246,.3);
+  animation:float 4s ease-in-out infinite;
+}
+
+.hero h1{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(45px,9vw,86px);
+  line-height:.95;
+  letter-spacing:-3px;
+  margin-bottom:24px;
+}
+
+.gradient{
+  background:linear-gradient(90deg,#c084fc,#f472b6,#fb7185);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.hero p{
+  max-width:650px;
+  margin:auto;
+  color:var(--muted);
+  line-height:1.7;
+  font-size:16px;
+}
+
+.hero-actions{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:35px;
+}
+
+/* BUTTONS */
+
+.btn{
+  border:0;
+  border-radius:15px;
+  padding:14px 21px;
+  color:white;
+  font-weight:700;
+  transition:.25s;
+}
+
+.btn:hover{
+  transform:translateY(-3px);
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);
+  box-shadow:0 12px 30px rgba(139,92,246,.22);
+}
+
+.btn-dark,
+.secondary{
+  background:rgba(255,255,255,.07);
+  border:1px solid var(--border);
+}
+
+/* COMMON */
+
+.section-title{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.section-title h2{
+  font-family:"Playfair Display",serif;
+  font-size:32px;
+  margin-bottom:8px;
+}
+
+.section-title p{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:13px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:22px;
+  backdrop-filter:blur(20px);
+}
+
+/* OCCASIONS */
+
+.occasion{
+  padding:22px 15px;
+  text-align:center;
+  transition:.25s;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.045);
+  border-radius:20px;
+  color:white;
+}
+
+.occasion:hover,
+.occasion.selected{
+  transform:translateY(-4px);
+  border-color:rgba(192,132,252,.7);
+  background:rgba(139,92,246,.13);
+}
+
+.occasion-icon{
+  font-size:31px;
+  margin-bottom:9px;
+}
+
+.occasion strong{
+  display:block;
+  font-size:14px;
+}
+
+.occasion small{
+  display:block;
+  margin-top:5px;
+  color:#9e99a8;
+  font-size:11px;
+}
+
+/* FORM */
+
+.form-card{
+  max-width:760px;
+  margin:30px auto;
+  padding:24px;
+}
+
+label{
+  display:block;
+  margin-bottom:8px;
+  color:#dcd7e3;
+  font-size:13px;
+  font-weight:600;
+}
+
+.field{
+  margin-bottom:18px;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  border:1px solid var(--border);
+  outline:none;
+  border-radius:13px;
+  background:rgba(0,0,0,.25);
+  color:white;
+  padding:13px 14px;
+}
+
+input:focus,
+textarea:focus{
+  border-color:#9b72f5;
+}
+
+textarea{
+  min-height:120px;
+  resize:vertical;
+}
+
+.two{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+/* PLANS */
+
+.plans{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-top:20px;
+}
+
+.plan{
+  position:relative;
+  padding:23px;
+  border-radius:22px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.05);
+  transition:.25s;
+  cursor:pointer;
+}
+
+.plan:hover,
+.plan.selected{
+  transform:translateY(-5px);
+  border-color:#a78bfa;
+  background:rgba(139,92,246,.12);
+}
+
+.plan.popular::before{
+  content:"MOST POPULAR";
+  position:absolute;
+  top:-10px;
+  right:15px;
+  background:linear-gradient(90deg,#8b5cf6,#ec4899);
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:800;
+}
+
+.plan h3{
+  margin-bottom:7px;
+}
+
+.price{
+  font-size:29px;
+  font-weight:800;
+  margin:8px 0 13px;
+}
+
+.plan ul{
+  list-style:none;
+  color:#aaa5b5;
+  font-size:12px;
+  line-height:2;
+}
+
+/* UPLOAD */
+
+.upload-box{
+  border:1px dashed #665c76;
+  padding:22px;
+  border-radius:18px;
+  text-align:center;
+  background:rgba(255,255,255,.025);
+}
+
+.upload-box input{
+  margin-top:13px;
+  padding:10px;
+}
+
+.preview-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:13px;
+}
+
+.preview-grid img{
+  width:100%;
+  aspect-ratio:1;
+  object-fit:cover;
+  border-radius:12px;
+  border:1px solid var(--border);
+}
+
+/* THEMES */
+
+.themes{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:13px;
+}
+
+.theme{
+  height:65px;
+  border-radius:16px;
+  border:2px solid transparent;
+  padding:8px;
+  color:white;
+  font-size:11px;
+  font-weight:700;
+}
+
+.theme.selected{
+  border-color:white;
+}
+
+.theme-aurora{
+  background:linear-gradient(135deg,#25104d,#8b5cf6,#ec4899);
+}
+
+.theme-sunset{
+  background:linear-gradient(135deg,#431407,#f97316,#fb7185);
+}
+
+.theme-ocean{
+  background:linear-gradient(135deg,#082f49,#0ea5e9,#67e8f9);
+}
+
+.theme-forest{
+  background:linear-gradient(135deg,#052e16,#16a34a,#86efac);
+}
+
+.theme-rose{
+  background:linear-gradient(135deg,#4c0519,#db2777,#f9a8d4);
+}
+
+.theme-midnight{
+  background:linear-gradient(135deg,#020617,#334155,#94a3b8);
+}
+
+/* WISH CARD */
+
+.wish-wrap{
+  display:flex;
+  justify-content:center;
+  padding:25px 0;
+}
+
+.wish{
+  width:min(620px,100%);
+  min-height:540px;
+  position:relative;
+  overflow:hidden;
+  padding:35px 25px;
+  border-radius:30px;
+  text-align:center;
+  background:linear-gradient(135deg,#25104d,#8b5cf6,#ec4899);
+  box-shadow:0 30px 90px rgba(0,0,0,.4);
+}
+
+.wish::before,
+.wish::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  background:rgba(255,255,255,.1);
+}
+
+.wish::before{
+  width:260px;
+  height:260px;
+  top:-120px;
+  right:-90px;
+}
+
+.wish::after{
+  width:200px;
+  height:200px;
+  bottom:-100px;
+  left:-70px;
+}
+
+.wish-content{
+  position:relative;
+  z-index:2;
+}
+
+.wish-kicker{
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.8;
+}
+
+.wish h2{
+  font-family:"Playfair Display",serif;
+  font-size:44px;
+  margin:14px 0 7px;
+}
+
+.wish-date{
+  opacity:.8;
+  font-size:13px;
+  margin-bottom:20px;
+}
+
+.wish-message{
+  max-width:500px;
+  margin:20px auto;
+  line-height:1.8;
+  white-space:pre-wrap;
+}
+
+.wish-photos{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  max-width:500px;
+  margin:20px auto;
+}
+
+.wish-photos img{
+  width:100%;
+  aspect-ratio:1;
+  object-fit:cover;
+  border-radius:16px;
+  border:2px solid rgba(255,255,255,.35);
+}
+
+.wish-footer{
+  margin-top:25px;
+  font-size:13px;
+  opacity:.8;
+}
+
+/* LOCK */
+
+.locked{
+  opacity:.48;
+  pointer-events:none;
+}
+
+.lock-note{
+  font-size:11px;
+  color:#9f99aa;
+  margin-top:7px;
+}
+
+/* ACTIONS */
+
+.actions{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+
+.instagram{
+  background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  bottom:25px;
+  left:50%;
+  transform:translate(-50%,20px);
+  background:#17131f;
+  border:1px solid var(--border);
+  padding:13px 17px;
+  border-radius:13px;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+  z-index:100;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+/* CONFETTI */
+
+.confetti{
+  position:fixed;
+  width:8px;
+  height:13px;
+  top:-20px;
+  z-index:200;
+  animation:fall linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+  .plans{
+    grid-template-columns:1fr;
+  }
+
+  .two{
+    grid-template-columns:1fr;
+  }
+
+  .themes{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .hero h1{
+    letter-spacing:-2px;
+  }
+
+  .nav{
+    margin-bottom:40px;
+  }
+
+  .wish h2{
+    font-size:36px;
+  }
+
+  .toast{
+    max-width:90%;
+    white-space:normal;
+    text-align:center;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= HOME ================= -->
+
+<section id="home" class="screen active">
+
+<div class="container">
+
+  <div class="nav">
+
+    <div class="logo">
+      Wish<span>ly</span> ✦
+    </div>
+
+    <div class="badge">
+      Digital wishes • from ₹20
+    </div>
+
+  </div>
+
+  <div class="hero">
+
+    <div class="hero-orb">
+      💌
+    </div>
+
+    <h1>
+      Make moments<br>
+      <span class="gradient">
+        feel special.
+      </span>
+    </h1>
+
+    <p>
+      Beautiful personalized digital wishes made for birthdays,
+      friendships, anniversaries, celebrations and unforgettable moments.
+    </p>
+
+    <div class="hero-actions">
+
+      <button
+        class="btn btn-primary"
+        onclick="go('occasionScreen')">
+        Create a Wish ✨
+      </button>
+
+      <button
+        class="btn btn-dark"
+        onclick="go('plansScreen')">
+        View Packages
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- ================= OCCASION ================= -->
+
+<section id="occasionScreen" class="screen">
+
+<div class="container">
+
+  <div class="section-title">
+
+    <h2>
+      What's the occasion?
+    </h2>
+
+    <p>
+      Pick a style and we'll build the experience around it.
+    </p>
+
+  </div>
+
+  <div class="grid">
+
+    <button
+      class="occasion"
+      onclick="selectOccasion(this,'Birthday')">
+
+      <div class="occasion-icon">
+        🎂
+      </div>
+
+      <strong>
+        Birthday
+      </strong>
+
+      <small>
+        Make their day brighter
+      </small>
+
+    </button>
+
+
+    <button
+      class="occasion"
+      onclick="selectOccasion(this,'Anniversary')">
+
+      <div class="occasion-icon">
+        💐
+      </div>
+
+      <strong>
+        Anniversary
+      </strong>
+
+      <small>
+        A special milestone
+      </small>
+
+    </button>
+
+
+    <button
+      class="occasion"
+      onclick="selectOccasion(this,'Friendship')">
+
+      <div class="occasion-icon">
+        🫶
+      </div>
+
+      <strong>
+        Friendship
+      </strong>
+
+      <small>
+        For your favourite people
+      </small>
+
+    </button>
+
+
+    <button
+      class="occasion"
+      onclick="selectOccasion(this,'Congratulations')">
+
+      <div class="occasion-icon">
+        🎉
+      </div>
+
+      <strong>
+        Congratulations
+      </strong>
+
+      <small>
+        Celebrate the win
+      </small>
+
+    </button>
+
+
+    <button
+      class="occasion"
+      onclick="selectOccasion(this,'Thank You')">
+
+      <div class="occasion-icon">
+        💌
+      </div>
+
+      <strong>
+        Thank You
+      </strong>
+
+      <small>
+        Say it beautifully
+      </small>
+
+    </button>
+
+
+    <button
+      class="occasion"
+      onclick="selectOccasion(this,'GF → BF')">
+
+      <div class="occasion-icon">
+        💜
+      </div>
+
+      <strong>
+        GF → BF
+      </strong>
+
+      <small>
+        A personal wish
+      </small>
+
+    </button>
+
+
+    <button
+      class="occasion"
+      onclick="selectOccasion(this,'BF → GF')">
+
+      <div class="occasion-icon">
+        💗
+      </div>
+
+      <strong>
+        BF → GF
+      </strong>
+
+      <small>
+        A personal wish
+      </small>
+
+    </button>
+
+
+    <button
+      class="occasion"
+      onclick="selectOccasion(this,'Proposal')">
+
+      <div class="occasion-icon">
+        💍
+      </div>
+
+      <strong>
+        Proposal
+      </strong>
+
+      <small>
+        Make the moment memorable
+      </small>
+
+    </button>
+
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- ================= DETAILS ================= -->
+
+<section id="detailsScreen" class="screen">
+
+<div class="container">
+
+  <div class="section-title">
+
+    <h2>
+      Personalize it
+    </h2>
+
+    <p>
+      Just a few details and your wish starts coming alive.
+    </p>
+
+  </div>
+
+
+  <div class="card form-card">
+
+    <div class="two">
+
+      <div class="field">
+
+        <label>
+          Recipient name
+        </label>
+
+        <input
+          id="recipient"
+          placeholder="e.g. Riya, manda, carol">
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Your name
+        </label>
+
+        <input
+          id="sender"
+          placeholder="e.g. ayush, happy, prince etc.">
+
+      </div>
+
+    </div>
+
+
+    <div class="field">
+
+      <label id="dateLabel">
+        Special date
+      </label>
+
+      <input
+        id="specialDate"
+        type="date">
+
+    </div>
+
+
+    <div class="field">
+
+      <label>
+        Your message
+      </label>
+
+      <textarea
+        id="message"
+        placeholder="Write something meaningful..."></textarea>
+
+    </div>
+
+
+    <button
+      class="btn btn-primary"
+      onclick="go('plansScreen')"
+      style="width:100%">
+
+      Continue →
+
+    </button>
+
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- ================= PLANS ================= -->
+
+<section id="plansScreen" class="screen">
+
+<div class="container">
+
+  <div class="section-title">
+
+    <h2>
+      Choose your experience
+    </h2>
+
+    <p>
+      Simple pricing. No complicated stuff.
+    </p>
+
+  </div>
+
+
+  <div class="plans">
+
+    <!-- ₹20 -->
+
+    <div
+      class="plan selected"
+      id="plan20"
+      onclick="selectPlan(20)">
+
+      <h3>
+        Sweet
+      </h3>
+
+      <div class="price">
+        ₹20
+      </div>
+
+      <ul>
+        <li>✓ Personalized wish</li>
+        <li>✓ Beautiful theme</li>
+        <li>✓ Animated card</li>
+        <li>✓ Confetti effect</li>
+      </ul>
+
+    </div>
+
+
+    <!-- ₹35 -->
+
+    <div
+      class="plan popular"
+      id="plan35"
+      onclick="selectPlan(35)">
+
+      <h3>
+        Photo Magic
+      </h3>
+
+      <div class="price">
+        ₹35
+      </div>
+
+      <ul>
+        <li>✓ Everything in ₹20</li>
+        <li>✓ Up to 3 photos</li>
+        <li>✓ Photo gallery</li>
+        <li>✓ Premium themes</li>
+      </ul>
+
+    </div>
+
+
+    <!-- ₹50 -->
+
+    <div
+      class="plan"
+      id="plan50"
+      onclick="selectPlan(50)">
+
+      <h3>
+        Premium
+      </h3>
+
+      <div class="price">
+        ₹50
+      </div>
+
+      <ul>
+        <li>✓ Everything in ₹35</li>
+        <li>✓ More photo customization</li>
+        <li>✓ Premium themes</li>
+        <li>✓ Premium experience</li>
+      </ul>
+
+    </div>
+
+  </div>
+
+
+  <!-- PHOTO UPLOAD -->
+
+  <div
+    class="card form-card"
+    id="photoBox">
+
+    <h3>
+      📸 Add photos
+    </h3>
+
+    <p class="lock-note">
+      Available with Photo Magic ₹35 and Premium ₹50.
+    </p>
+
+    <div
+      class="upload-box"
+      style="margin-top:15px">
+
+      <div>
+        Drop your photos here
+      </div>
+
+      <small style="color:#aaa5b5">
+        Up to 3 photos
+      </small>
+
+      <input
+        id="photoInput"
+        type="file"
+        accept="image/*"
+        multiple
+        onchange="previewPhotos(event)">
+
+      <div
+        id="photoPreview"
+        class="preview-grid">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- THEMES -->
+
+  <div class="card form-card">
+
+    <h3>
+      🎨 Pick a theme
+    </h3>
+
+    <div class="themes">
+
+      <button
+        class="theme theme-aurora selected"
+        onclick="selectTheme(this,'aurora')">
+        Aurora
+      </button>
+
+      <button
+        class="theme theme-sunset"
+        onclick="selectTheme(this,'sunset')">
+        Sunset
+      </button>
+
+      <button
+        class="theme theme-ocean"
+        onclick="selectTheme(this,'ocean')">
+        Ocean
+      </button>
+
+      <button
+        class="theme theme-forest"
+        onclick="selectTheme(this,'forest')">
+        Forest
+      </button>
+
+      <button
+        class="theme theme-rose"
+        onclick="selectTheme(this,'rose')">
+        Rose
+      </button>
+
+      <button
+        class="theme theme-midnight"
+        onclick="selectTheme(this,'midnight')">
+        Midnight
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="actions">
+
+    <button
+      class="btn secondary"
+      onclick="go('detailsScreen')">
+
+      ← Back
+
+    </button>
+
+
+    <button
+      class="btn btn-primary"
+      onclick="makeWish()">
+
+      Create My Wish ✨
+
+    </button>
+
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- ================= FINAL ================= -->
+
+<section id="finalScreen" class="screen">
+
+<div class="container">
+
+  <div class="section-title">
+
+    <h2>
+      Your wish is ready ✨
+    </h2>
+
+    <p>
+      Here's your personalized digital wish.
+    </p>
+
+  </div>
+
+
+  <div class="wish-wrap">
+
+    <div
+      id="wishCard"
+      class="wish">
+
+      <div class="wish-content">
+
+        <div
+          class="wish-kicker"
+          id="wishOccasion">
+
+          A SPECIAL MESSAGE
+
+        </div>
+
+
+        <h2 id="wishRecipient">
+          Someone Special
+        </h2>
+
+
+        <div
+          class="wish-date"
+          id="wishDate">
+        </div>
+
+
+        <div
+          id="wishPhotos"
+          class="wish-photos">
+        </div>
+
+
+        <div
+          class="wish-message"
+          id="wishMessage">
+
+          Your beautiful message goes here.
+
+        </div>
+
+
+        <div class="wish-footer">
+          Made with ✦ Wishly
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="actions">
+
+    <button
+      class="btn secondary"
+      onclick="go('plansScreen')">
+
+      ← Edit
+
+    </button>
+
+
+    <button
+      class="btn instagram"
+      onclick="orderInstagram()">
+
+      📩 Order via Instagram DM
+
+    </button>
+
+  </div>
+
+
+  <div
+    style="
+      text-align:center;
+      margin-top:13px;
+      color:#8f899c;
+      font-size:11px;
+    ">
+
+    Order details will be copied before Instagram opens.
+
+  </div>
+
+</div>
+
+</section>
+
+
+<div id="toast" class="toast"></div>
+
+
+<script>
+
+/* =========================================================
+   WISHLY SETTINGS
+========================================================= */
+
+const INSTAGRAM_USERNAME = "dn1.pnz";
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let selectedOccasion = "Birthday";
+
+let selectedPlan = 20;
+
+let selectedTheme = "aurora";
+
+let selectedPhotos = [];
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function go(id){
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(screen =>
+      screen.classList.remove("active")
+    );
+
+  document
+    .getElementById(id)
+    .classList.add("active");
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* =========================================================
+   OCCASION
+========================================================= */
+
+function selectOccasion(button,type){
+
+  selectedOccasion = type;
+
+  document
+    .querySelectorAll(".occasion")
+    .forEach(x =>
+      x.classList.remove("selected")
+    );
+
+  button.classList.add("selected");
+
+
+  const dateLabel =
+    document.getElementById("dateLabel");
+
+
+  if(type === "Birthday"){
+
+    dateLabel.textContent =
+      "Birthday";
+
+  }
+
+  else if(type === "Anniversary"){
+
+    dateLabel.textContent =
+      "Anniversary date";
+
+  }
+
+  else if(type === "Proposal"){
+
+    dateLabel.textContent =
+      "Special date (optional)";
+
+  }
+
+  else if(type === "Congratulations"){
+
+    dateLabel.textContent =
+      "Achievement / special date";
+
+  }
+
+  else{
+
+    dateLabel.textContent =
+      "Special date (optional)";
+
+  }
+
+
+  go("detailsScreen");
+
+}
+
+
+/* =========================================================
+   PLAN
+========================================================= */
+
+function selectPlan(price){
+
+  selectedPlan = price;
+
+  document
+    .querySelectorAll(".plan")
+    .forEach(x =>
+      x.classList.remove("selected")
+    );
+
+
+  document
+    .getElementById("plan"+price)
+    .classList.add("selected");
+
+
+  updatePackageUI();
+
+}
+
+
+function updatePackageUI(){
+
+  const photoBox =
+    document.getElementById("photoBox");
+
+
+  if(selectedPlan >= 35){
+
+    photoBox.classList.remove("locked");
+
+  }
+
+  else{
+
+    photoBox.classList.add("locked");
+
+  }
+
+}
+
+
+/* =========================================================
+   PHOTOS
+========================================================= */
+
+function previewPhotos(event){
+
+  selectedPhotos = [];
+
+
+  const files =
+    [...event.target.files].slice(0,3);
+
+
+  const preview =
+    document.getElementById("photoPreview");
+
+
+  preview.innerHTML = "";
+
+
+  files.forEach(file => {
+
+    const reader =
+      new FileReader();
+
+
+    reader.onload =
+      function(e){
+
+        selectedPhotos.push(e.target.result);
+
+
+        const img =
+          document.createElement("img");
+
+
+        img.src =
+          e.target.result;
+
+
+        preview.appendChild(img);
+
+      };
+
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
+
+
+/* =========================================================
+   CREATE WISH
+========================================================= */
+
+function makeWish(){
+
+  const recipient =
+    document
+      .getElementById("recipient")
+      .value
+      .trim();
+
+
+  const sender =
+    document
+      .getElementById("sender")
+      .value
+      .trim();
+
+
+  const message =
+    document
+      .getElementById("message")
+      .value
+      .trim();
+
+
+  const date =
+    document
+      .getElementById("specialDate")
+      .value;
+
+
+  if(!recipient){
+
+    showToast(
+      "Please enter the recipient's name."
+    );
+
+    go("detailsScreen");
+
+    return;
+
+  }
+
+
+  if(!message){
+
+    showToast(
+      "Add a message first."
+    );
+
+    go("detailsScreen");
+
+    return;
+
+  }
+
+
+  document
+    .getElementById("wishOccasion")
+    .textContent =
+      selectedOccasion;
+
+
+  document
+    .getElementById("wishRecipient")
+    .textContent =
+      recipient;
+
+
+  document
+    .getElementById("wishMessage")
+    .textContent =
+      message +
+      (sender ? "\n\n— " + sender : "");
+
+
+  const dateElement =
+    document.getElementById("wishDate");
+
+
+  if(date){
+
+    const d =
+      new Date(date + "T00:00:00");
+
+
+    dateElement.textContent =
+      d.toLocaleDateString(
+        undefined,
+        {
+          day:"numeric",
+          month:"long",
+          year:"numeric"
+        }
+      );
+
+  }
+
+  else{
+
+    dateElement.textContent = "";
+
+  }
+
+
+  /* PHOTOS */
+
+  const photoContainer =
+    document.getElementById("wishPhotos");
+
+
+  photoContainer.innerHTML = "";
+
+
+  if(selectedPlan >= 35){
+
+    selectedPhotos
+      .slice(0,3)
+      .forEach(src => {
+
+        const img =
+          document.createElement("img");
+
+
+        img.src = src;
+
+
+        photoContainer.appendChild(img);
+
+      });
+
+  }
+
+
+  applyTheme();
+
+
+  go("finalScreen");
+
+
+  setTimeout(
+    launchConfetti,
+    300
+  );
+
+}
+
+
+/* =========================================================
+   THEMES
+========================================================= */
+
+function selectTheme(button,theme){
+
+  selectedTheme = theme;
+
+
+  document
+    .querySelectorAll(".theme")
+    .forEach(x =>
+      x.classList.remove("selected")
+    );
+
+
+  button.classList.add("selected");
+
+}
+
+
+function applyTheme(){
+
+  const card =
+    document.getElementById("wishCard");
+
+
+  const themes = {
+
+    aurora:
+      "linear-gradient(135deg,#25104d,#8b5cf6,#ec4899)",
+
+    sunset:
+      "linear-gradient(135deg,#431407,#f97316,#fb7185)",
+
+    ocean:
+      "linear-gradient(135deg,#082f49,#0ea5e9,#67e8f9)",
+
+    forest:
+      "linear-gradient(135deg,#052e16,#16a34a,#86efac)",
+
+    rose:
+      "linear-gradient(135deg,#4c0519,#db2777,#f9a8d4)",
+
+    midnight:
+      "linear-gradient(135deg,#020617,#334155,#94a3b8)"
+
+  };
+
+
+  card.style.background =
+    themes[selectedTheme];
+
+}
+
+
+/* =========================================================
+   INSTAGRAM DM
+========================================================= */
+
+async function orderInstagram(){
+
+  const recipient =
+    document
+      .getElementById("recipient")
+      .value
+      .trim();
+
+
+  const sender =
+    document
+      .getElementById("sender")
+      .value
+      .trim();
+
+
+  const date =
+    document
+      .getElementById("specialDate")
+      .value;
+
+
+  const message =
+    document
+      .getElementById("message")
+      .value
+      .trim();
+
+
+  const photoInfo =
+    selectedPlan >= 35
+      ? selectedPhotos.length +
+        " photo(s)"
+      : "None";
+
+
+  const order =
+
+`✨ WISHLY ORDER ✨
+
+Package: ₹${selectedPlan}
+
+Occasion: ${selectedOccasion}
+
+Recipient: ${recipient || "Not provided"}
+
+From: ${sender || "Not provided"}
+
+Special Date: ${date || "Not provided"}
+
+Photos: ${photoInfo}
+
+Theme: ${selectedTheme}
+
+Message:
+${message || "Not provided"}
+
+Instagram: @${INSTAGRAM_USERNAME}`;
+
+
+  try{
+
+    await navigator.clipboard.writeText(order);
+
+    showToast(
+      "Order copied! Opening Instagram DM 📩"
+    );
+
+  }
+
+  catch(error){
+
+    showToast(
+      "Opening Instagram DM…"
+    );
+
+  }
+
+
+  setTimeout(() => {
+
+    window.location.href =
+      "https://ig.me/m/" +
+      INSTAGRAM_USERNAME;
+
+  },700);
+
+}
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+function launchConfetti(){
+
+  const symbols =
+    ["✦","✧","•","♥","✿","◆"];
+
+
+  for(
+    let i = 0;
+    i < 55;
+    i++
+  ){
+
+    const piece =
+      document.createElement("div");
+
+
+    piece.className =
+      "confetti";
+
+
+    piece.textContent =
+      symbols[
+        Math.floor(
+          Math.random() *
+          symbols.length
+        )
+      ];
+
+
+    piece.style.left =
+      Math.random() *
+      100 +
+      "vw";
+
+
+    piece.style.fontSize =
+      (
+        8 +
+        Math.random() *
+        12
+      ) +
+      "px";
+
+
+    piece.style.animationDuration =
+      (
+        2 +
+        Math.random() *
+        3
+      ) +
+      "s";
+
+
+    piece.style.animationDelay =
+      Math.random() +
+      "s";
+
+
+    document.body.appendChild(
+      piece
+    );
+
+
+    setTimeout(
+      () => piece.remove(),
+      6000
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+
+function showToast(text){
+
+  const toast =
+    document.getElementById("toast");
+
+
+  toast.textContent =
+    text;
+
+
+  toast.classList.add("show");
+
+
+  clearTimeout(
+    toastTimer
+  );
+
+
+  toastTimer =
+    setTimeout(
+      () =>
+        toast.classList.remove("show"),
+      2500
+    );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+updatePackageUI();
+
+</script>
+
+</body>
+</html>
